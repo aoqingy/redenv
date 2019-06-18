@@ -63,6 +63,19 @@ def parse_players(result):
 
         print('---', index, '---')
 
+        # 貌似数量和时间识别不会出错
+        # 名称和数量分别占第一个和第二个
+        # 本段逻辑不能处理名称没有的情况，因此，如果微信昵称为单字（例如邓、学），
+        # 可能导致整条红包记录无法解析。建议添加微信好友的方式修改好友注释为多字
+        # （红包显示优先使用好友注释）
+        # 最佳可能没有。如果没有，时间为第三个；如果有，时间和最佳分别占第三个和第四个。
+        #player\namount\ntime
+        #player\namount\ntime\nbest
+        #player\namount\nbest\ntime
+        #amount\nplayer\ntime
+        #amount\nplayer\ntime\nbest
+        #amount\nplayer\nbest\ntime
+
         rplayer = {}
         if result[index]['text'].endswith(u'元'):
             try:
@@ -79,9 +92,9 @@ def parse_players(result):
             rplayer['amount'] = str(float(result[index+1]['text'][:-1]))
             index += 2
 
+        #如果识别出多余的内容（非时间和最佳），忽略之
         if (index < len(result) and 
                 not u'手气' in result[index]['text'] and
-                not u'元' in result[index]['text'] and
                 not ':' in result[index]['text']):
             index += 1
 
@@ -93,7 +106,6 @@ def parse_players(result):
         if ((index < len(result) and ':' in result[index]['text']) or 
                 (index+1 < len(result) and ':' in result[index+1]['text'])):
             index += 1
-            tflag = True
 
         if ((index < len(result) and u'手气' in result[index]['text']) or
                 (index+1 < len(result) and u'手气' in result[index+1]['text'])):
@@ -114,8 +126,6 @@ if __name__ == "__main__":
         print("No path specified!")
         sys.exit(1)
 
-    print(len(sys.argv))
-
     if not os.path.isdir(sys.argv[1]):
         print("Path invalid!")
         sys.exit(1)
@@ -128,6 +138,8 @@ if __name__ == "__main__":
     _send = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.send.html')
     _play = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.play.html')
     print(_xlsx)
+    print(_send)
+    print(_play)
 
     import xlrd
     import xlsxwriter

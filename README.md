@@ -1,5 +1,5 @@
 ## 本项目实现交大校友群微信红包自动统计
-## 基于github项目chineocr
+基于github项目chineseocr
 
 ## 环境部署
 
@@ -14,11 +14,11 @@ cd chineseocr/
 git clone https://github.com/pjreddie/darknet.git
 conda create -n chineseocr python=3.6 pip scipy numpy jupyter ipython
 
-git submodule init && git submodule update
+#git submodule init && git submodule update
 pip install easydict opencv-contrib-python==4.0.0.21 Cython h5py lmdb mahotas pandas requests bs4 matplotlib lxml -i https://pypi.tuna.tsinghua.edu.cn/simple/
 pip install -U pillow -i https://pypi.tuna.tsinghua.edu.cn/simple/
-pip install web.py==0.40.dev0
-pip install keras==2.1.5 tensorflow==1.8
+#pip install web.py==0.40.dev0
+pip install keras tensorflow
 pushd text/detector/utils && sh make-for-cpu.sh && popd
 conda install pytorch torchvision -c pytorch
 #apt-get install -y python-qt4
@@ -55,11 +55,11 @@ pushd darknet/ && make && popd
 
 ## 生成统计
 将当日红包截屏拷贝到sjtu相应日期（20190615）的目录下；
-运行python redenv.py /root/chineseocr/sjtu/20190615；
+运行python main.py /root/chineseocr/sjtu/20190615；
 复制生成的结果文件（在/root/chineseocr/sjtu目录下）。
 
 
 ## DOCKER
 docker build -t redenv .
 docker run -p 5900:5900 -v /root/redenv/sjtu:sjtu -it redenv /bin/bash
- 
+python /opt/redenv/main.py /sjtu/20190615
