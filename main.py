@@ -28,6 +28,31 @@ def detect(path):
     return result
 
 
+NAME_REFS = {}
+NAME_REFS[u'大成宇宙'] = [u'大成宇审', u'士大成宇宙']
+NAME_REFS[u'董军'] = [u'董军8', u'董军B', u'董军国', u'董军江']
+NAME_REFS[u'jack21'] = [u'jaCk21']
+NAME_REFS[u'樊亮水Lance'] = [u'樊亮水LanCe']
+NAME_REFS[u'李时勤'] = [u'李时董', u'实李时勤', u'广李时勤']
+NAME_REFS[u'张慧'] = [u'我张慧']
+NAME_REFS[u'邓昭明'] = [u'装邓昭明']
+NAME_REFS[u'云里雾中'] = [u'解云里雾中', u'经云里雾中', u'美云里雾中']
+NAME_REFS[u'孙健'] = [u'顺孙健']
+NAME_REFS[u'轻轻松松'] = [u'吉轻轻松松']
+NAME_REFS[u'凡不拙'] = [u'汤凡不拙']
+NAME_REFS[u'冉朝阳'] = [u'母冉朝阳']
+NAME_REFS[u'陈老兔'] = [u'陈老免', u'陈老矣']
+NAME_REFS[u'风和日丽'] = [u'风和日所']
+NAME_REFS[u'邓玉洁'] = [u'武邓玉洁']
+
+
+def correct_name(name):
+    for key in NAME_REFS.keys():
+        if name in NAME_REFS[key]:
+            return key
+    return name
+
+
 def parse_text(result):
     for item in result:
         print(item['text'])
@@ -36,7 +61,7 @@ def parse_text(result):
 def parse_sender(result):
     for item in result:
         if u"的红包" in item['text']:
-            return item['text'][:-4]
+            return correct_name(item['text'][:-4])
     return ''
 
 
@@ -80,15 +105,15 @@ def parse_players(result):
         if result[index]['text'].endswith(u'元'):
             try:
                 rplayer['amount'] = str(float(result[index]['text'][:-1]))
-                rplayer['player'] = result[index+1]['text']
+                rplayer['player'] = correct_name(result[index+1]['text'])
                 index += 2
             except:
-                rplayer['player'] = result[index]['text']
+                rplayer['player'] = correct_name(result[index]['text'])
                 rplayer['amount'] = str(float(result[index+1]['text'][:-1]))
                 index += 2
                 
         else:
-            rplayer['player'] = result[index]['text']
+            rplayer['player'] = correct_name(result[index]['text'])
             rplayer['amount'] = str(float(result[index+1]['text'][:-1]))
             index += 2
 
