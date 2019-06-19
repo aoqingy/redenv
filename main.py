@@ -137,9 +137,11 @@ if __name__ == "__main__":
     _xlsx = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.xlsx')
     _send = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.send.html')
     _play = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.play.html')
+    _luck = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.luck.html')
     print(_xlsx)
     print(_send)
     print(_play)
+    print(_luck)
 
     import xlrd
     import xlsxwriter
@@ -185,6 +187,7 @@ if __name__ == "__main__":
 
     sdict = {}			#发红包榜
     pdict = {}			#抢红包榜
+    ldict = {}                  #拼手速榜
     count = 1
     for _file in sorted(os.listdir(_path), reverse=False):
         print("=============================================")
@@ -208,7 +211,10 @@ if __name__ == "__main__":
             count += 1
             continue
 
-        print(players)
+        for player in players:
+            for p in sorted(player.items(), key=lambda x:x[0], reverse=False):
+                print('{}:{}'.format(p[0], p[1]), end='\t')
+            print('')
 
         LABELS = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M']
         for i in range(0, 10):
@@ -222,6 +228,8 @@ if __name__ == "__main__":
             else:
                 sheet.write(LABELS[i]+str(count+1), player + '/' + str(amount), iformat)
             pdict[player] = round(pdict.get(player, 0) + float(amount), 2)
+
+            ldict[player] = ldict.get(player, 0) + 1
 
         count += 1
         #if count == 10:
@@ -248,3 +256,13 @@ if __name__ == "__main__":
     pbar.add_yaxis("交大校友交流学习群"+_date[:4]+"年"+_date[4:6]+"月"+_date[6:]+"日红包福利榜", [x[1] for x in plist])
     pbar.set_global_opts(xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(interval=0, rotate=45)))
     pbar.render(_play)
+
+    #按从小到大的顺序显示拼手速榜
+    llist = list(ldict.items())
+    llist.sort(key=lambda x:x[1],reverse=False)
+    lbar = Bar()
+    lbar.add_xaxis([x[0] for x in llist])
+    lbar.add_yaxis("交大校友交流学习群"+_date[:4]+"年"+_date[4:6]+"月"+_date[6:]+"日红包幸运榜", [x[1] for x in llist])
+    lbar.set_global_opts(xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(interval=0, rotate=45)))
+    lbar.render(_luck)
+

@@ -68,9 +68,6 @@ RUN apt-get update ;\
 ENV LANG C.UTF-8
 
 RUN mkdir /opt/redenv
-COPY main.py /opt/redenv/main.py
-COPY model.py /opt/redenv/model.py
-COPY config.py /opt/redenv/config.py
 COPY darknet /opt/redenv/darknet
 COPY models /opt/redenv/models
 COPY apphelper /opt/redenv/apphelper
@@ -78,6 +75,9 @@ COPY crnn /opt/redenv/crnn
 COPY text /opt/redenv/text
 COPY tools /opt/redenv/tools
 COPY train /opt/redenv/train
+COPY config.py /opt/redenv/config.py
+COPY model.py /opt/redenv/model.py
+COPY main.py /opt/redenv/main.py
 #ADD redenv.tar.gz /opt/
 #ENTRYPOINT ["/bin/bash", "/usr/sbin/startup.sh"]
 

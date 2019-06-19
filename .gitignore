@@ -8,6 +8,10 @@
 *.h5
 *.pbtxt
 *.weights
+*.xlsx
+*.luck.html
+*.play.html
+*.send.html
 dist
 buil
 .DS_Store*
