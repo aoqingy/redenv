@@ -34,18 +34,23 @@ NAME_REFS[u'大成宇宙'] = [u'大成宇审', u'士大成宇宙']
 NAME_REFS[u'风和日丽'] = [u'风和日所']
 NAME_REFS[u'老鼠辉辉'] = [u'O老鼠辉辉']
 NAME_REFS[u'轻轻松松'] = [u'吉轻轻松松']
-NAME_REFS[u'云里雾中'] = [u'解云里雾中', u'经云里雾中', u'美云里雾中']
+NAME_REFS[u'静心净德'] = [u'静心净']
+NAME_REFS[u'海笑石烂'] = [u'海笑石']
+NAME_REFS[u'云里雾中'] = [u'解云里雾中', u'经云里雾中', u'美云里雾中', u'经云里雾']
 NAME_REFS[u'wsy-448'] = [u'WSy-448']
 NAME_REFS[u'李时勤'] = [u'李时董', u'实李时勤', u'广李时勤']
-NAME_REFS[u'邓昭明'] = [u'装邓昭明']
+NAME_REFS[u'邓昭明'] = [u'装邓昭明', u'数邓昭明']
 NAME_REFS[u'凡不拙'] = [u'汤凡不拙']
 NAME_REFS[u'冉朝阳'] = [u'母冉朝阳']
 NAME_REFS[u'陈老兔'] = [u'陈老免', u'陈老矣']
 NAME_REFS[u'邓玉洁'] = [u'武邓玉洁']
 NAME_REFS[u'郁方明'] = [u'美郁方明']
-NAME_REFS[u'jack21'] = [u'jaCk21']
+NAME_REFS[u'施小强'] = [u'三施小强']
+NAME_REFS[u'卢松琴'] = [u'一卢松琴']
+NAME_REFS[u'张亚林'] = [u'金张亚林']
+NAME_REFS[u'jack21'] = [u'jaCk21', u'jacK21']
 NAME_REFS[u'Yilia'] = [u'Yili']
-NAME_REFS[u'董军'] = [u'董军8', u'董军B', u'董军国', u'董军江']
+NAME_REFS[u'董军'] = [u'董军8', u'董军B', u'董军国', u'董军江', u'董军胆', u'董军l']
 NAME_REFS[u'张慧'] = [u'我张慧']
 NAME_REFS[u'孙健'] = [u'顺孙健']
 
@@ -171,6 +176,7 @@ if __name__ == "__main__":
     _joic = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.joic.html')
     _hope = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.hope.html')
     _amnt = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.amnt.html')
+    _favr = os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.favr.html')
     print(_xlsx)
     print(_send)
     print(_play)
@@ -180,6 +186,7 @@ if __name__ == "__main__":
     print(_joic)
     print(_hope)
     print(_amnt)
+    print(_favr)
 
     import xlrd
     import xlsxwriter
@@ -231,6 +238,8 @@ if __name__ == "__main__":
     jdict = {}                  #最大不接龙
     edict = {}                  #最大抢包榜
     adict = {}                  #抢红包总额
+    fdict = {}                  #连庄榜
+    zdict = {}                  #个人榜
     count = 1
     for _file in sorted(os.listdir(_path), reverse=False):
         print("=============================================")
@@ -261,6 +270,14 @@ if __name__ == "__main__":
 
         LABELS = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M']
         run = '第'+str(count).zfill(2)+'轮'
+
+        if count > 1 and fdict.get('第'+str(count-1).zfill(2)+'轮', '') and fdict['第'+str(count-1).zfill(2)+'轮']['sender'] == sender:
+            fdict['第'+str(count).zfill(2)+'轮'] = {'sender': sender, 'kiss': fdict['第'+str(count-1).zfill(2)+'轮']['kiss'] + 1}
+        else:
+            fdict['第'+str(count).zfill(2)+'轮'] = {'sender': sender, 'kiss': 1}
+
+        print('第'+str(count).zfill(2)+'轮', fdict['第'+str(count).zfill(2)+'轮'])
+
         adict[run] = 0.0
         for i in range(0, 10):
             if len(players) <= i:
@@ -277,6 +294,11 @@ if __name__ == "__main__":
             ldict[player] = ldict.get(player, 0) + 1
 
             adict[run] = round(adict[run]+float(amount), 2)
+
+            if player in zdict:
+                zdict[player][run] = amount
+            else:
+                zdict[player] = {run: amount}
 
             minimum = float(hdict.get(run, '200\n无名氏').split('\n')[0])
             if minimum == float(amount):
@@ -306,7 +328,7 @@ if __name__ == "__main__":
         print('Runner:  ' + jdict[run])
 
         count += 1
-        #if count == 3:
+        #if count == 5:
         #    break
     book.close()
 
@@ -315,6 +337,15 @@ if __name__ == "__main__":
             cdict[key] = round(float(sdict[key]) - float(pdict[key]), 2)
         else:
             cdict[key] = round(0.0 - float(pdict[key]), 2)
+
+    for key in zdict.keys():
+        for i in range(1, count):
+            run = '第'+str(i).zfill(2)+'轮'
+            if run not in zdict[key]:
+                zdict[key][run] = 0.0
+
+    #for key in zdict.keys():
+    #    print(key, "\t", zdict[key])
 
     from pyecharts import options as opts
     from pyecharts.charts import Bar
@@ -371,7 +402,7 @@ if __name__ == "__main__":
     jbar.add_xaxis(['/'.join(x[1].split('\n')[1:]) for x in jlist])
     jbar.add_yaxis("交大校友交流学习群"+_date[:4]+"年"+_date[4:6]+"月"+_date[6:]+"日红包开心榜", [x[1].split('\n')[0] for x in jlist])
     jbar.set_global_opts(xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(interval=0, rotate=45, font_size=10)))
-    jbar.render(_hope)
+    jbar.render(_joic)
 
     #按从小到大的顺序显示最大抢包榜
     elist = list(edict.items())
@@ -386,8 +417,26 @@ if __name__ == "__main__":
     alist = list(adict.items())
     alist.sort(key=lambda x:x[0],reverse=False)
     abar = Bar()
-    abar.add_xaxis(['/'.join(x[1].split('\n')[1:]) for x in alist])
-    abar.add_yaxis("交大校友交流学习群"+_date[:4]+"年"+_date[4:6]+"月"+_date[6:]+"日红包信用榜", [x[1].split('\n')[0] for x in alist])
+    abar.add_xaxis([x[0] for x in alist])
+    abar.add_yaxis("交大校友交流学习群"+_date[:4]+"年"+_date[4:6]+"月"+_date[6:]+"日红包信用榜", [x[1] for x in alist])
     abar.set_global_opts(xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(interval=0, rotate=45, font_size=10)))
     abar.render(_amnt)
+
+    #按从小到大的顺序显示连庄榜
+    flist = list(fdict.items())
+    flist.sort(key=lambda x:x[0],reverse=False)
+    fbar = Bar()
+    fbar.add_xaxis([x[1]['sender'] for x in flist])
+    fbar.add_yaxis("交大校友交流学习群"+_date[:4]+"年"+_date[4:6]+"月"+_date[6:]+"日红包爱神之吻榜", [x[1]['kiss'] for x in flist])
+    fbar.set_global_opts(xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(interval=0, rotate=45, font_size=10)))
+    fbar.render(_favr)
+
+    for key in zdict.keys():
+        zlist = list(zdict[key].items())
+        zlist.sort(key=lambda x:x[0],reverse=False)
+        zbar = Bar()
+        zbar.add_xaxis([x[0] for x in zlist])
+        zbar.add_yaxis("交大校友交流学习群"+_date[:4]+"年"+_date[4:6]+"月"+_date[6:]+"日红包风采榜——"+key, [x[1] for x in zlist])
+        zbar.set_global_opts(xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(interval=0, rotate=45, font_size=10)))
+        zbar.render(os.path.join(os.path.dirname(sys.argv[1]), os.path.basename(sys.argv[1])+'.'+key+'.html'))
 
