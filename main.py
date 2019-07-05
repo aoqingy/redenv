@@ -30,31 +30,36 @@ def detect(path):
 
 NAME_REFS = {}
 NAME_REFS[u'樊亮水Lance'] = [u'樊亮水LanCe']
+NAME_REFS[u'沈家门囝2019'] = [u'司沈家门田2019', u'司沈家门田201', u'沈家门国2019', u'沈家门国201']
 NAME_REFS[u'大成宇宙'] = [u'大成宇审', u'士大成宇宙']
+NAME_REFS[u'春风化雨'] = [u'空春风化雨']
 NAME_REFS[u'风和日丽'] = [u'风和日所']
 NAME_REFS[u'老鼠辉辉'] = [u'O老鼠辉辉']
 NAME_REFS[u'轻轻松松'] = [u'吉轻轻松松']
 NAME_REFS[u'静心净德'] = [u'静心净']
 NAME_REFS[u'海笑石烂'] = [u'海笑石']
-NAME_REFS[u'云里雾中'] = [u'解云里雾中', u'经云里雾中', u'美云里雾中', u'经云里雾']
+NAME_REFS[u'云里雾中'] = [u'解云里雾中', u'经云里雾中', u'美云里雾中', u'经云里雾', u'要云里雾中']
 NAME_REFS[u'wsy-448'] = [u'WSy-448']
+NAME_REFS[u'KallyWang'] = [u'YKallyWang']
 NAME_REFS[u'李时勤'] = [u'李时董', u'实李时勤', u'广李时勤', u'这李时勤']
 NAME_REFS[u'邓昭明'] = [u'装邓昭明', u'数邓昭明']
 NAME_REFS[u'凡不拙'] = [u'汤凡不拙']
 NAME_REFS[u'冉朝阳'] = [u'母冉朝阳']
 NAME_REFS[u'陈老兔'] = [u'陈老免', u'陈老矣']
-NAME_REFS[u'邓玉洁'] = [u'武邓玉洁']
+NAME_REFS[u'邓玉洁'] = [u'武邓玉洁', u'邓玉']
 NAME_REFS[u'郁方明'] = [u'美郁方明']
 NAME_REFS[u'施小强'] = [u'三施小强']
-NAME_REFS[u'卢松琴'] = [u'一卢松琴']
+NAME_REFS[u'卢松琴'] = [u'一卢松琴', u'卢松缈']
 NAME_REFS[u'张亚林'] = [u'金张亚林']
+NAME_REFS[u'曲天赫'] = [u'无曲天赫']
 NAME_REFS[u'KallyWang'] = [u'YKallyWan']
 NAME_REFS[u'jack21'] = [u'jaCk21', u'jacK21']
 NAME_REFS[u'Yilia'] = [u'Yili']
 NAME_REFS[u'peter'] = [u'petel']
 NAME_REFS[u'董军'] = [u'董军8', u'董军B', u'董军国', u'董军江', u'董军胆', u'董军l']
 NAME_REFS[u'张慧'] = [u'我张慧']
-NAME_REFS[u'孙健'] = [u'顺孙健', u'僧孙健']
+NAME_REFS[u'孙健'] = [u'顺孙健', u'僧孙健', u'啊孙健']
+NAME_REFS[u'王怡'] = [u'王恰']
 NAME_REFS[u'AO'] = [u'AC']
 
 
@@ -377,7 +382,7 @@ if __name__ == "__main__":
     clist.sort(key=lambda x:x[1],reverse=False)
     cbar = Bar()
     cbar.add_xaxis([x[0] for x in clist])
-    cbar.add_yaxis("交大校友交流学习群"+_date[:4]+"年"+_date[4:6]+"月"+_date[6:]+"日红包奉献榜", [x[1] for x in clist])
+    cbar.add_yaxis("交大校友交流学习群"+_date[:4]+"年"+_date[4:6]+"月"+_date[6:]+"日红包奉献榜——"+str(len(clist))+"人"+"(最大盈利："+clist[0][0]+"/"+str(abs(clist[0][1]))+"；最大亏损："+clist[-1][0]+"/"+str(clist[-1][1])+")", [x[1] for x in clist])
     cbar.set_global_opts(xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(interval=0, rotate=45)))
     cbar.render(_cntr)
 
